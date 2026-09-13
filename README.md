@@ -1,16 +1,39 @@
-# React + Vite
+# 🎮 AlphaNum Match: Interactive Word & Number Drop Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+An interactive, arcade-style web game built using **React** and **CSS**, featuring dynamic DVD-logo style bouncing characters, real-time stats tracking, responsive three-column layouts, and smart balancing mechanics.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🔗 Live Demo & Links
+- **Live Game URL:** [https://alphanum-match.vercel.app](https://alphanum-match.vercel.app) 
 
-## React Compiler
+- **Creator Portfolio:** [Er Rohit Portfolio](https://er-rohit.freedev.app/?i=1) *
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the Oxlint configuration
+## 📸 Game Screenshot
+![AlphaNum Match Gameplay](./alphanum-match.png)  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+---
+
+## 🚀 Key Features
+- **Smart Item Spawning:** Frequent matching letters/numbers drop down alongside random garbage items.
+- **Bouncing Physics Arena:** DVD-logo style smooth bouncing mechanics touching all arena edges with dynamic neon border coloring.
+- **Interactive Target Boxes:** Dual word/number completion tracking with independent word rotation.
+- **Garbage Management:** Send unmatched items to the garbage bin for bonus points.
+- **Pause & Continue:** Dedicated timer control and pause overlay for uninterrupted gaming sessions.
+
+---
+
+## 🛠️ Built With
+- **Frontend:** React 18, JSX
+- **Styling:** Custom CSS3 with Neon Animations & Gradients
+- **Environment:** Node.js, Vite / VS Code
+
+---
+
+## 👨‍💻 Author & Creator
+Designed and Developed with ❤️ by **[Er Rohit](https://er-rohit.freedev.app/?i=1)**.
+
+---
+*(© 2026 Er Rohit. All rights reserved.)*
