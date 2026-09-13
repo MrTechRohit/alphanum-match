@@ -1,0 +1,480 @@
+body {
+  margin: 0;
+  background-color: #0b0f19;
+  color: #f1f5f9;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
+}
+
+/* Main Layout */
+.main-layout-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  min-height: 100vh;
+  padding: 10px;
+  box-sizing: border-box;
+  gap: 10px;
+  position: relative;
+  padding-bottom: 145px;
+}
+
+/* Small Left Side Panel */
+.side-panel-left {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 10px;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.side-panel-left h4 {
+  margin: 0 0 6px 0;
+  color: #38bdf8;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #475569;
+  padding-bottom: 3px;
+}
+
+.status-badge {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 6px 0 2px 0;
+  text-align: center;
+}
+
+.status-instruction {
+  font-size: 0.7rem;
+  color: #cbd5e1;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.instruction-box {
+  margin-top: 8px;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  padding: 6px;
+}
+
+.instruction-box h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.7rem;
+  color: #facc15;
+  border-bottom: none;
+}
+
+.instruction-box ul {
+  margin: 0;
+  padding-left: 14px;
+  font-size: 0.6rem;
+  color: #94a3b8;
+  line-height: 1.2;
+}
+
+/* Copyright Section at Bottom of Left Panel */
+.copyright-box {
+  border-top: 1px solid #334155;
+  padding-top: 6px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.copyright-box p {
+  margin: 0;
+  font-size: 0.6rem;
+  color: #f8fafc;
+  font-weight: bold;
+}
+
+.portfolio-link {
+  color: #38bdf8;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.portfolio-link:hover {
+  color: #facc15;
+  text-decoration: underline;
+}
+
+.lang-tags {
+  display: block;
+  font-size: 0.5rem;
+  color: #64748b;
+  margin-top: 2px;
+  line-height: 1.1;
+}
+
+/* Small Right Side Panel */
+.side-panel-right {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 10px;
+  width: 150px;
+  position: relative;
+}
+
+.side-panel-right h4 {
+  margin: 0 0 6px 0;
+  color: #38bdf8;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #475569;
+  padding-bottom: 3px;
+}
+
+@keyframes danceToy {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  25% {
+    transform: translateY(-6px) rotate(-10deg) scale(1.1);
+  }
+
+  50% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+
+  75% {
+    transform: translateY(-6px) rotate(10deg) scale(1.1);
+  }
+
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1);
+  }
+}
+
+.dancing-toy-top {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 4px;
+  animation: danceToy 0.8s infinite ease-in-out;
+}
+
+/* Pause & Resume Button Style */
+.pause-btn {
+  width: 100%;
+  padding: 6px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-bottom: 8px;
+  color: white;
+  transition: background 0.2s;
+}
+
+.pause-btn.pause {
+  background-color: #f59e0b;
+}
+
+.pause-btn.pause:hover {
+  background-color: #d97706;
+}
+
+.pause-btn.resume {
+  background-color: #22c55e;
+}
+
+.pause-btn.resume:hover {
+  background-color: #16a34a;
+}
+
+.stat-card {
+  background: #0f172a;
+  border: 1px solid #475569;
+  border-radius: 6px;
+  padding: 4px 6px;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.stat-label {
+  margin: 0;
+  font-size: 0.6rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  margin: 2px 0 0 0;
+  font-size: 0.95rem;
+  font-weight: bold;
+  color: #38bdf8;
+}
+
+.stat-value.high-score {
+  color: #facc15;
+}
+
+.stat-value.timer {
+  color: #22c55e;
+  font-family: monospace;
+}
+
+/* Big & Wide Center Game Area */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 750px;
+  margin: 0 5px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.game-header h1 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #38bdf8;
+}
+
+.reset-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.7rem;
+  transition: background 0.2s;
+}
+
+.reset-btn:hover {
+  background: #dc2626;
+}
+
+.game-arena-wide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  flex: 1;
+  background: #1e293b;
+  border: 3px solid #334155;
+  border-bottom: none;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  padding: 0;
+  position: relative;
+  min-height: 200px;
+  overflow: hidden;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Pause Overlay */
+.pause-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  border-radius: 12px;
+}
+
+.pause-overlay h2 {
+  color: #facc15;
+  font-size: 1.5rem;
+  text-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
+  margin: 0;
+}
+
+@keyframes continuousRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.bouncing-rotating-letter {
+  position: absolute;
+  font-size: 4.5rem;
+  font-weight: bold;
+  animation: continuousRotate 2s linear infinite;
+  user-select: none;
+}
+
+/* OVERLAPPING GARBAGE BUTTON */
+.garbage-button-overlap {
+  position: fixed;
+  bottom: 125px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  border: 2px dashed #ef4444;
+  padding: 6px 18px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  cursor: pointer;
+  z-index: 150;
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.garbage-button-overlap:hover {
+  background: #1e293b;
+  border-color: #f87171;
+  transform: translateX(-50%) scale(1.05);
+}
+
+.garbage-button-overlap span {
+  color: #ef4444;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* ANIMATED COLORFUL FOOTER CONTAINER */
+@keyframes rainbowGlow {
+  0% {
+    border-color: #3b82f6;
+    box-shadow: 0 -5px 20px rgba(59, 130, 246, 0.4);
+  }
+
+  33% {
+    border-color: #ec4899;
+    box-shadow: 0 -5px 20px rgba(236, 72, 153, 0.4);
+  }
+
+  66% {
+    border-color: #8b5cf6;
+    box-shadow: 0 -5px 20px rgba(139, 92, 246, 0.4);
+  }
+
+  100% {
+    border-color: #3b82f6;
+    box-shadow: 0 -5px 20px rgba(59, 130, 246, 0.4);
+  }
+}
+
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(135deg, #0f172a, #1e1b4b, #0f172a);
+  border-top: 3px solid #3b82f6;
+  animation: rainbowGlow 6s infinite ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px 15px;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.footer-boxes-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  width: 100%;
+}
+
+.word-box-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #1e293b;
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: 2px solid #475569;
+  width: 270px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.word-box-container:hover {
+  border-color: #38bdf8;
+}
+
+.box-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 3px;
+}
+
+.word-box-container h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 0.85rem;
+}
+
+.word-slots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.slot {
+  width: 26px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+  border: 1.5px dashed #64748b;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 4px;
+  color: #94a3b8;
+}
+
+.slot.filled {
+  background: #22c55e;
+  border-style: solid;
+  border-color: #16a34a;
+  color: white;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+}
+
+.action-btn {
+  padding: 4px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+  width: 100%;
+  font-size: 0.7rem;
+  transition: background 0.2s;
+}
+
+.left-btn {
+  background-color: #3b82f6;
+}
+
+.left-btn:hover {
+  background-color: #2563eb;
+}
+
+.right-btn {
+  background-color: #8b5cf6;
+}
+
+.right-btn:hover {
+  background-color: #7c3aed;
+}
