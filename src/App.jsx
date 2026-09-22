@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './App.css';
-import logoImg from './assets/logo.png'; // Ensure your logo is placed at src/assets/logo.png
 
 const wordPool = [
   "REACT18", "CODE99", "VITE5", "NODEJS", "HTML5", 
@@ -286,10 +285,10 @@ function App() {
         </div>
       </div>
 
-      {/* RIGHT SIDE PANEL WITH 3D ROTATING LOGO */}
+      {/* RIGHT SIDE PANEL WITH 3D ROTATING LOGO FROM PUBLIC FOLDER */}
       <div className="side-panel-right">
         <div className="rotating-logo-container">
-          <img src={logoImg} alt="Logo" className="rotating-logo-img" />
+          <img src="/logo.PNG" alt="Logo" className="rotating-logo-img" />
         </div>
         <h4>📊 Stats & Level</h4>
         
