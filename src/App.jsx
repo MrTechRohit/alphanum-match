@@ -1,18 +1,26 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './App.css';
+import logoImg from './assets/logo.png'; // Ensure your logo is placed at src/assets/logo.png
 
-const wordPool = ["REACT18", "CODE99", "VITE5", "NODEJS", "HTML5", "CSS3", "JAVA8", "BYTE20", "DATA404", "BASE64"];
+const wordPool = [
+  "REACT18", "CODE99", "VITE5", "NODEJS", "HTML5", 
+  "CSS3", "JAVA8", "BYTE20", "DATA404", "BASE64", 
+  "PYTHON", "TYPESCRIPT", "MONGODB", "GITHUB", "LINUX", 
+  "DOCKER", "API99", "EXPRESS", "REDUX", "FIREBASE"
+];
+
 const colorPool = ["#38bdf8", "#facc15", "#f43f5e", "#22c55e", "#a855f7", "#ec4899", "#fb923c", "#2dd4bf"];
 
 function App() {
   const getRandomWord = () => wordPool[Math.floor(Math.random() * wordPool.length)];
   const getRandomColor = () => colorPool[Math.floor(Math.random() * colorPool.length)];
 
-  const [leftWord, setLeftWord] = useState("REACT18");
-  const [leftFilled, setLeftFilled] = useState(Array(7).fill(false));
+  const [difficulty, setDifficulty] = useState('easy');
 
-  const [rightWord, setRightWord] = useState("CODE99");
-  const [rightFilled, setRightFilled] = useState(Array(6).fill(false));
+  const [boxes, setBoxes] = useState([
+    { id: 'left', word: "REACT18", filled: Array(7).fill(false) },
+    { id: 'right', word: "CODE99", filled: Array(6).fill(false) }
+  ]);
 
   const [totalCompletedWords, setTotalCompletedWords] = useState(0);
   const [garbageCount, setGarbageCount] = useState(0);
@@ -20,12 +28,12 @@ function App() {
 
   const [currentItem, setCurrentItem] = useState('R');
   const [itemColor, setItemColor] = useState('#38bdf8');
-
+  
   const [pos, setPos] = useState({ x: 200, y: 80 });
   const [vel, setVel] = useState({ x: 2, y: 1.5 });
 
   const [feedbackEmoji, setFeedbackEmoji] = useState('🎮');
-  const [message, setMessage] = useState('Balanced drop: Mostly matching letters with some garbage items!');
+  const [message, setMessage] = useState('Match the correct letter to proceed!');
 
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
@@ -34,21 +42,42 @@ function App() {
 
   const arenaRef = useRef(null);
 
-  // Balanced Smart Generator: 70% matching items from words, 30% random garbage items
+  const handleDifficultyChange = (level) => {
+    setDifficulty(level);
+    let count = 2;
+    if (level === 'normal') count = 3;
+    if (level === 'hard') count = 4;
+
+    const newBoxes = [];
+    const ids = ['left', 'center-left', 'center-right', 'right'];
+    for (let i = 0; i < count; i++) {
+      const w = getRandomWord();
+      newBoxes.push({
+        id: ids[i],
+        word: w,
+        filled: Array(w.length).fill(false)
+      });
+    }
+    setBoxes(newBoxes);
+    setMessage(`Difficulty set to ${level.toUpperCase()}! Find the matching box.`);
+    spawnNewItem();
+  };
+
   const getBalancedItem = useCallback(() => {
-    const leftNeeded = leftWord.split('').filter((_, idx) => !leftFilled[idx]);
-    const rightNeeded = rightWord.split('').filter((_, idx) => !rightFilled[idx]);
-    const allNeeded = [...leftNeeded, ...rightNeeded];
+    let allNeeded = [];
+    boxes.forEach(box => {
+      const needed = box.word.split('').filter((_, idx) => !box.filled[idx]);
+      allNeeded = [...allNeeded, ...needed];
+    });
 
     const randomChance = Math.random();
-
     if (randomChance < 0.7 && allNeeded.length > 0) {
       return allNeeded[Math.floor(Math.random() * allNeeded.length)];
     }
 
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     return chars[Math.floor(Math.random() * chars.length)];
-  }, [leftWord, leftFilled, rightWord, rightFilled]);
+  }, [boxes]);
 
   const spawnNewItem = useCallback(() => {
     setCurrentItem(getBalancedItem());
@@ -121,13 +150,14 @@ function App() {
 
   const handleGarbageClick = () => {
     if (isPaused) return;
-    const canMatchLeft = leftWord.split('').some((char, idx) => char === currentItem && !leftFilled[idx]);
-    const canMatchRight = rightWord.split('').some((char, idx) => char === currentItem && !rightFilled[idx]);
+    const canMatchAny = boxes.some(box => 
+      box.word.split('').some((char, idx) => char === currentItem && !box.filled[idx])
+    );
 
-    if (!canMatchLeft && !canMatchRight) {
+    if (!canMatchAny) {
       setGarbageCount(prev => prev + 1);
       setFeedbackEmoji('🗑️ Trashed');
-      setMessage(`Unmatched item '${currentItem}' successfully sent to Garbage!`);
+      setMessage(`Unmatched item '${currentItem}' sent to Garbage! Next item incoming.`);
       const updatedScore = score + 15;
       setScore(updatedScore);
       if (updatedScore > highScore) setHighScore(updatedScore);
@@ -139,62 +169,56 @@ function App() {
     }
   };
 
-  const handleBoxClick = (side) => {
+  const handleBoxClick = (boxId) => {
     if (isPaused) return;
-    const word = side === 'left' ? leftWord : rightWord;
-    const filled = side === 'left' ? leftFilled : rightFilled;
 
-    const targetIndex = word.split('').findIndex((char, idx) => char === currentItem && !filled[idx]);
+    const clickedBox = boxes.find(b => b.id === boxId);
+    if (!clickedBox) return;
+
+    const targetIndex = clickedBox.word.split('').findIndex((char, idx) => char === currentItem && !clickedBox.filled[idx]);
 
     if (targetIndex !== -1) {
-      const newFilled = [...filled];
-      newFilled[targetIndex] = true;
+      setBoxes(prevBoxes => {
+        return prevBoxes.map(box => {
+          if (box.id !== boxId) return box;
 
-      setMaxMatches(prev => prev + 1);
-      const isComplete = newFilled.every(Boolean);
+          const newFilled = [...box.filled];
+          newFilled[targetIndex] = true;
 
-      if (isComplete) {
-        setTotalCompletedWords(prev => prev + 1);
-        const updatedScore = score + 200;
-        setScore(updatedScore);
-        if (updatedScore > highScore) setHighScore(updatedScore);
-        setFeedbackEmoji('🎉 Word Completed!');
+          setMaxMatches(prev => prev + 1);
+          const isComplete = newFilled.every(Boolean);
 
-        const newWord = getRandomWord();
-        if (side === 'left') {
-          setLeftWord(newWord);
-          setLeftFilled(Array(newWord.length).fill(false));
-          setMessage(`Left word completed! New word '${newWord}' loaded.`);
-        } else {
-          setRightWord(newWord);
-          setRightFilled(Array(newWord.length).fill(false));
-          setMessage(`Right word completed! New word '${newWord}' loaded.`);
-        }
-      } else {
-        if (side === 'left') setLeftFilled(newFilled);
-        else setRightFilled(newFilled);
+          if (isComplete) {
+            setTotalCompletedWords(prev => prev + 1);
+            const updatedScore = score + 200;
+            setScore(updatedScore);
+            if (updatedScore > highScore) setHighScore(updatedScore);
+            setFeedbackEmoji('🎉 Word Completed!');
 
-        const updatedScore = score + 35;
-        setScore(updatedScore);
-        if (updatedScore > highScore) setHighScore(updatedScore);
-
-        setFeedbackEmoji('🔥 Perfect Match!');
-        setMessage(`Matched '${currentItem}' in ${side.toUpperCase()} box at position ${targetIndex + 1}!`);
-      }
+            const newWord = getRandomWord();
+            setMessage(`Word completed! New word '${newWord}' loaded.`);
+            return { ...box, word: newWord, filled: Array(newWord.length).fill(false) };
+          } else {
+            const updatedScore = score + 35;
+            setScore(updatedScore);
+            if (updatedScore > highScore) setHighScore(updatedScore);
+            setFeedbackEmoji('🔥 Perfect Match!');
+            setMessage(`Matched '${currentItem}' successfully!`);
+            return { ...box, filled: newFilled };
+          }
+        });
+      });
 
       spawnNewItem();
     } else {
-      setFeedbackEmoji('😢 Sad / Wrong');
-      setMessage(`Item '${currentItem}' does not match here. Use Garbage Box for unmatched items!`);
+      setFeedbackEmoji('❌ Wrong Click');
+      setMessage(`Warning: '${currentItem}' does not exist or has no empty slot in this box! Letter keeps bouncing.`);
       setScore(prev => Math.max(0, prev - 5));
     }
   };
 
   const handleReset = () => {
-    setLeftWord("REACT18");
-    setLeftFilled(Array(7).fill(false));
-    setRightWord("CODE99");
-    setRightFilled(Array(6).fill(false));
+    handleDifficultyChange(difficulty);
     setTotalCompletedWords(0);
     setGarbageCount(0);
     setMaxMatches(0);
@@ -202,51 +226,44 @@ function App() {
     setSecondsElapsed(0);
     setIsPaused(false);
     setFeedbackEmoji('🔄 Reset');
-    setMessage('Game has been reset. Balanced drop active!');
-    spawnNewItem();
   };
 
   return (
     <div className="main-layout-container">
-
+      
+      {/* LEFT SIDE PANEL */}
       <div className="side-panel-left">
         <div className="left-content-top">
           <h4>💬 Status</h4>
           <div className="status-badge">{feedbackEmoji}</div>
           <p className="status-instruction">{message}</p>
-
+          
           <div className="instruction-box">
             <h4>📖 How to Play</h4>
             <ul>
-              <li><strong>Balanced Drop:</strong> Mostly matching items with some random garbage.</li>
-              <li><strong>Match:</strong> Click box if item fits an empty slot.</li>
-              <li><strong>Garbage:</strong> Use garbage for unmatched items (+15 pts).</li>
-              <li><strong>Goal:</strong> Clear words and score high!</li>
+              <li><strong>Bouncing:</strong> Letter stays until correct click.</li>
+              <li><strong>Strict Match:</strong> Wrong box keeps letter bouncing & warns.</li>
+              <li><strong>Garbage:</strong> Discard unmatched items.</li>
+              <li><strong>Goal:</strong> Complete words & score high!</li>
             </ul>
           </div>
         </div>
 
-        {/* Copyright Section with Portfolio Link on Er Rohit */}
         <div className="copyright-box">
-          <p>
-            © 2026{' '}
-            <a href="https://er-rohit.freedev.app/?i=1" target="_blank" rel="noopener noreferrer" className="portfolio-link">
-              Er Rohit
-            </a>
-            . All rights reserved.
-          </p>
+          <p>© 2026 Er Rohit. All rights reserved.</p>
           <span className="lang-tags">Built with JavaScript, React, HTML5, CSS3 & Node.js</span>
         </div>
       </div>
 
+      {/* CENTER GAME ARENA */}
       <div className="game-container">
         <header className="game-header">
-          <h1>Balanced Item Match Game</h1>
+          <h1>Smart Item Match Game ({difficulty.toUpperCase()})</h1>
           <button className="reset-btn" onClick={handleReset}>🔄 Reset</button>
         </header>
 
-        <div
-          className="game-arena-wide"
+        <div 
+          className="game-arena-wide" 
           ref={arenaRef}
           style={{ borderColor: itemColor, boxShadow: `0 -5px 25px ${itemColor}44` }}
         >
@@ -255,9 +272,9 @@ function App() {
               <h2>⏸️ GAME PAUSED</h2>
             </div>
           )}
-          <div
+          <div 
             className="bouncing-rotating-letter"
-            style={{
+            style={{ 
               left: `${pos.x}px`,
               top: `${pos.y}px`,
               color: itemColor,
@@ -269,12 +286,36 @@ function App() {
         </div>
       </div>
 
+      {/* RIGHT SIDE PANEL WITH 3D ROTATING LOGO */}
       <div className="side-panel-right">
-        <div className="dancing-toy-top">🧸 🪩 ✨</div>
-        <h4>📊 Stats</h4>
+        <div className="rotating-logo-container">
+          <img src={logoImg} alt="Logo" className="rotating-logo-img" />
+        </div>
+        <h4>📊 Stats & Level</h4>
+        
+        <div className="difficulty-container">
+          <button 
+            className={`diff-btn ${difficulty === 'easy' ? 'active' : ''}`} 
+            onClick={() => handleDifficultyChange('easy')}
+          >
+            Easy (2)
+          </button>
+          <button 
+            className={`diff-btn ${difficulty === 'normal' ? 'active' : ''}`} 
+            onClick={() => handleDifficultyChange('normal')}
+          >
+            Normal (3)
+          </button>
+          <button 
+            className={`diff-btn ${difficulty === 'hard' ? 'active' : ''}`} 
+            onClick={() => handleDifficultyChange('hard')}
+          >
+            Hard (4)
+          </button>
+        </div>
 
-        <button
-          className={`pause-btn ${isPaused ? 'resume' : 'pause'}`}
+        <button 
+          className={`pause-btn ${isPaused ? 'resume' : 'pause'}`} 
           onClick={() => setIsPaused(!isPaused)}
         >
           {isPaused ? '▶️ Continue' : '⏸️ Pause'}
@@ -298,41 +339,29 @@ function App() {
         </div>
       </div>
 
+      {/* GARBAGE BOX POSITIONED BETWEEN ARENA AND FOOTER */}
       <button className="garbage-button-overlap" onClick={handleGarbageClick}>
         🗑️ Garbage Box: <span>{garbageCount}</span>
       </button>
 
+      {/* FOOTER CONTAINER */}
       <div className="footer-container">
         <div className="footer-boxes-container">
-
-          <div className="word-box-container" onClick={() => handleBoxClick('left')}>
-            <div className="box-header">
-              <h3>Target: {leftWord}</h3>
+          {boxes.map((box) => (
+            <div key={box.id} className="word-box-container" onClick={() => handleBoxClick(box.id)}>
+              <div className="box-header">
+                <h3>Target: <strong>{box.word}</strong></h3>
+              </div>
+              <div className="word-slots">
+                {box.word.split('').map((char, idx) => (
+                  <span key={idx} className={`slot ${box.filled[idx] ? 'filled' : ''}`}>
+                    {box.filled[idx] ? <strong>{char}</strong> : '_'}
+                  </span>
+                ))}
+              </div>
+              <button className="action-btn match-btn">Click to Match</button>
             </div>
-            <div className="word-slots">
-              {leftWord.split('').map((char, idx) => (
-                <span key={idx} className={`slot ${leftFilled[idx] ? 'filled' : ''}`}>
-                  {leftFilled[idx] ? char : '_'}
-                </span>
-              ))}
-            </div>
-            <button className="action-btn left-btn">Click to Match Left</button>
-          </div>
-
-          <div className="word-box-container" onClick={() => handleBoxClick('right')}>
-            <div className="box-header">
-              <h3>Target: {rightWord}</h3>
-            </div>
-            <div className="word-slots">
-              {rightWord.split('').map((char, idx) => (
-                <span key={idx} className={`slot ${rightFilled[idx] ? 'filled' : ''}`}>
-                  {rightFilled[idx] ? char : '_'}
-                </span>
-              ))}
-            </div>
-            <button className="action-btn right-btn">Click to Match Right</button>
-          </div>
-
+          ))}
         </div>
       </div>
 
