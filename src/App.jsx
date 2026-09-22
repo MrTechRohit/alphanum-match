@@ -249,7 +249,7 @@ function App() {
         </div>
 
         <div className="copyright-box">
-          <p>© 2026 Er Rohit. All rights reserved.</p>
+          <p>© 2026 <a href="https://er-rohit.freedev.app/?i=1" target="_blank" rel="noopener noreferrer" className="portfolio-link">Er. Rohit</a> All rights reserved.</p>
           <span className="lang-tags">Built with JavaScript, React, HTML5, CSS3 & Node.js</span>
         </div>
       </div>
